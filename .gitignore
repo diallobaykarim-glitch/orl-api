@@ -1,5 +1,30 @@
-DockerDesktopPersonnel/
+# Python cache
 __pycache__/
-.pytest_cache/
-*.egg-info/
+*.pyc
+*.pyo
+*.pyd
+
+# Environnements
+.env
+.env.*
+!.env.example
+
+# ML / modèles
+model.pkl
+*.joblib
+*.h5
+
+# Logs / coverage
 .coverage
+.pytest_cache/
+
+# Packaging
+*.egg-info/
+
+# OS / Docker
+DockerDesktopPersonnel/
+
+# Data sensible uniquement (optionnel)
+data/*.db
+data/*.pkl
+data/*.env
