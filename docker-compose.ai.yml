@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: orl-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: orl
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./app
+    container_name: orl-api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/orl
+      PYTHONUNBUFFERED: 1
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  dashboard:
+    build: ./dashboard
+    container_name: orl-dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      PYTHONUNBUFFERED: 1
+    depends_on:
+      - api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Model Runner pour recommandations IA
+  model-runner:
+    image: ollama/ollama:latest
+    container_name: orl-model-runner
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - ai
+
+volumes:
+  pgdata:
+  ollama_data:
+
+networks:
+  default:
+    name: orl-network
