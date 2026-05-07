@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-05-07T02:13:37.857878",
+  "total_patients": 33,
+  "statistics": {
+    "probability": {
+      "mean": 0.7536060606060607,
+      "median": 0.763,
+      "std": 0.08031653760042955,
+      "min": 0.581,
+      "max": 0.906
+    },
+    "risk_distribution": {
+      "\u00c9lev\u00e9": 32,
+      "Mod\u00e9r\u00e9": 1
+    },
+    "age": {
+      "mean": 63.15151515151515,
+      "median": 67.0,
+      "std": 16.56827014982481
+    }
+  },
+  "sex_distribution": {
+    "F": 18,
+    "M": 15
+  }
+}
